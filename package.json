@@ -1,0 +1,77 @@
+{
+  "name": "@korzun/config",
+  "description": "Simple Node.js Application Configuration Utility",
+  "private": false,
+  "license": "MIT",
+  "version": "1.0.1",
+  "keywords": [
+    "config",
+    "registry",
+    "settings",
+    "deployment",
+    "state",
+    "properties"
+  ],
+  "author": {
+    "name": "Simon Korzun",
+    "url": "https://github.com/Korzun"
+  },
+  "bugs": {
+    "url": "https://github.com/Korzun/config/issues"
+  },
+  "files": [
+    "dist",
+    "package-lock.json",
+    "README.md",
+    "src"
+  ],
+  "homepage": "https://github.com/Korzun/config#readme",
+  "main": "dist/cjs",
+  "types": "dist/cjs/index.d.ts",
+  "module": "dist/esm",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Korzun/config.git"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "@types/jest": "^28.1.8",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
+    "concurrently": "^7.3.0",
+    "dripip": "^0.10.0",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.8.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^28.1.3",
+    "markdownlint-cli": "^0.32.2",
+    "prettier": "^2.6.1",
+    "prettier-plugin-jsdoc": "^0.3.38",
+    "ts-jest": "^28.0.8",
+    "ts-node": "^10.9.1",
+    "tsc-watch": "^4.2.9",
+    "typescript": "^4.7.4"
+  },
+  "scripts": {
+    "build:cjs": "tsc -p 'tsconfig.build.cjs.json'",
+    "build:esm": "tsc -p 'tsconfig.build.esm.json'",
+    "build": "npm run clean && concurrently \"npm run build:*\"",
+    "clean": "rm -rf 'dist'",
+    "lint:code:fix": "npm run lint:code -- --fix",
+    "lint:code": "eslint 'src/**'",
+    "lint:git": "npx commitlint --from $(git rev-parse --short $(git rev-list --max-parents=0 HEAD))",
+    "lint:markdown": "markdownlint '**/*.md'",
+    "lint:typescript": "tsc -p 'tsconfig.build.cjs.json' --noEmit",
+    "lint": "concurrently \"npm:lint:*(!fix)\" -g",
+    "prepublish": "npm run build",
+    "release:pr": "dripip pr --json",
+    "release:preview": "dripip preview-or-pr --json",
+    "release:stable": "dripip stable --json",
+    "test:ci": "npm run test -- --maxWorkers 2 --coverage --ci --reporters=default",
+    "test:watch": "npm run test -- --watchAll",
+    "test": "jest"
+  }
+}

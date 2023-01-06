@@ -36,13 +36,7 @@ export function getString(name: string, options: GetStringOptions = {}) {
   const { allowList, allowUndefined, default: defaultValue } = options;
   const value = process.env[name];
   if (value !== undefined && value !== '') {
-    if (allowList !== undefined && !allowList.includes(value)) {
-      const error = new ListValueConfigError(name, value, allowList);
-      if (Error.captureStackTrace) {
-        Error.captureStackTrace(error, getString);
-      }
-      throw error;
-    }
+    validateList(name, value, allowList);
     return value;
   }
   if (defaultValue !== undefined) {
@@ -57,3 +51,13 @@ export function getString(name: string, options: GetStringOptions = {}) {
   }
   throw error;
 }
+
+const validateList = (name: string, value: string, list?: string[]): void => {
+  if (list !== undefined && !list.includes(value)) {
+    const error = new ListValueConfigError(name, value, list);
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(error, getString);
+    }
+    throw error;
+  }
+};

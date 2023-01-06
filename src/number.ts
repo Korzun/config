@@ -37,13 +37,7 @@ export function getNumber(name: string, options: GetNumberOptions = {}) {
   const stringValue = process.env[name];
   if (stringValue !== undefined && stringValue !== '') {
     const value = Number(stringValue);
-    if (allowList !== undefined && !allowList.includes(value)) {
-      const error = new ListValueConfigError(name, stringValue, allowList);
-      if (Error.captureStackTrace) {
-        Error.captureStackTrace(error, getNumber);
-      }
-      throw error;
-    }
+    validateList(name, stringValue, value, allowList);
     return value;
   }
   if (defaultValue !== undefined) {
@@ -58,3 +52,18 @@ export function getNumber(name: string, options: GetNumberOptions = {}) {
   }
   throw error;
 }
+
+const validateList = (
+  name: string,
+  stringValue: string,
+  value: number,
+  list?: number[],
+): void => {
+  if (list !== undefined && !list.includes(value)) {
+    const error = new ListValueConfigError(name, stringValue, list);
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(error, getNumber);
+    }
+    throw error;
+  }
+};

@@ -1,11 +1,25 @@
 import { NotDefinedConfigError } from './error';
 
-export type GetBooleanOptions = {
-  allowUndefined?: boolean;
-  default?: boolean;
+type GetBooleanOptionsAllowUndefined = {
+  allowUndefined: true;
+  default?: undefined;
 };
+type GetBooleanOptionsNoDefault = {
+  allowUndefined?: false;
+  default?: undefined;
+};
+type GetBooleanOptionsDefault = {
+  allowUndefined?: false;
+  default: boolean;
+};
+
+export type GetBooleanOptions =
+  | GetBooleanOptionsAllowUndefined
+  | GetBooleanOptionsNoDefault
+  | GetBooleanOptionsDefault;
+
 /**
- * Returns an environmental variable as a `boolean`
+ * Returns an environmental variable as a `boolean` or undefined.
  */
 export function getBoolean(
   name: string,
@@ -14,6 +28,9 @@ export function getBoolean(
     default?: undefined;
   },
 ): boolean | undefined;
+/**
+ * Returns an environmental variable as a `boolean` or, if undefined, throws an error.
+ */
 export function getBoolean(
   name: string,
   options?: {
@@ -21,6 +38,10 @@ export function getBoolean(
     default?: undefined;
   },
 ): boolean;
+/**
+ * Returns an environmental variable as a `boolean` or, if undefined, the
+ * provided default value.
+ */
 export function getBoolean(
   name: string,
   options: {

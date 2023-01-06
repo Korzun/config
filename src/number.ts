@@ -35,19 +35,71 @@ export type GetNumberOptions =
   | GetNumberOptionsDefault;
 
 /**
- * Returns an environmental variable as a `number`
+ * Returns an environmental variable as a `number` or undefined. Optionally the
+ * value can be validated by an `allowList` or `allowRange`.
  */
 export function getNumber(
   name: string,
-  options: GetNumberOptionsAllowUndefined,
+  options: {
+    allowUndefined: true;
+    default?: undefined;
+  } & (
+    | {
+        allowList?: undefined;
+        allowRange?: undefined;
+      }
+    | {
+        allowList: number[];
+      }
+    | {
+        allowRange: [number, number];
+      }
+  ),
 ): number | undefined;
+/**
+ * Returns an environmental variable as a `number` or, if undefined, throws an
+ * error. Optionally the value can be validated by an `allowList` or `allowRange`.
+ */
 export function getNumber(
   name: string,
-  options?: GetNumberOptionsNoDefault,
+  options?: {
+    allowUndefined?: false;
+    default?: undefined;
+  } & (
+    | {
+        allowList?: undefined;
+        allowRange?: undefined;
+      }
+    | {
+        allowList: number[];
+      }
+    | {
+        allowRange: [number, number];
+      }
+  ),
 ): number;
+/**
+ * Returns an environmental variable as a `number` or, if undefined, the
+ * provided default value. Optionally the value can be validated by an
+ * `allowList` or `allowRange`.
+ */
 export function getNumber(
   name: string,
-  options: GetNumberOptionsDefault,
+  options: {
+    allowUndefined?: false;
+    default: number;
+  } & (
+    | {
+        allowList?: undefined;
+        allowRange?: undefined;
+      }
+    | {
+        allowList: number[];
+      }
+    | {
+        allowRange: [number, number];
+      }
+  ),
 ): number;
 export function getNumber(name: string, options: GetNumberOptions = {}) {
   const {

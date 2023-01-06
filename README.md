@@ -27,6 +27,7 @@ export const log = {
     default: true
   }),
   flushFrequency: getNumber('LOG_FLUSH_DURATION', {
+    allowRange: [500, 10_000]
     default: 1000
   }), 
   level: getString('LOG_LEVEL', {

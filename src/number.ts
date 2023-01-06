@@ -1,4 +1,4 @@
-import { NotDefinedConfigError, ValueConfigError } from './error';
+import { NotDefinedConfigError, ListValueConfigError } from './error';
 
 export type GetNumberOptions = {
   allowList?: number[];
@@ -38,7 +38,7 @@ export function getNumber(name: string, options: GetNumberOptions = {}) {
   if (stringValue !== undefined && stringValue !== '') {
     const value = Number(stringValue);
     if (allowList !== undefined && !allowList.includes(value)) {
-      const error = new ValueConfigError(name, stringValue);
+      const error = new ListValueConfigError(name, stringValue, allowList);
       if (Error.captureStackTrace) {
         Error.captureStackTrace(error, getNumber);
       }

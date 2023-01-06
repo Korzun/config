@@ -1,4 +1,4 @@
-import { NotDefinedConfigError, ValueConfigError } from './error';
+import { NotDefinedConfigError, ListValueConfigError } from './error';
 
 export type GetStringOptions = {
   allowList?: string[];
@@ -37,7 +37,7 @@ export function getString(name: string, options: GetStringOptions = {}) {
   const value = process.env[name];
   if (value !== undefined && value !== '') {
     if (allowList !== undefined && !allowList.includes(value)) {
-      const error = new ValueConfigError(name, value);
+      const error = new ListValueConfigError(name, value, allowList);
       if (Error.captureStackTrace) {
         Error.captureStackTrace(error, getString);
       }

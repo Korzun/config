@@ -1,4 +1,4 @@
-import { NotDefinedConfigError, ValueConfigError } from './error';
+import { NotDefinedConfigError, ListValueConfigError } from './error';
 import { getNumber } from './number';
 
 describe('getNumber', () => {
@@ -46,7 +46,7 @@ describe('getNumber', () => {
           process.env.TEST_NUMBER = '30.33';
           expect(() => {
             getNumber('TEST_NUMBER', { allowList: [10, 20] });
-          }).toThrow(new ValueConfigError('TEST_NUMBER', 30.33));
+          }).toThrow(new ListValueConfigError('TEST_NUMBER', 30.33, [10, 20]));
         });
       });
     });

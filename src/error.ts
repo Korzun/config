@@ -37,3 +37,18 @@ export class ListValueConfigError extends ConfigError {
     );
   }
 }
+
+export class RangeValueConfigError extends ConfigError {
+  constructor(
+    name: string,
+    value: string | number,
+    range: [number, number],
+    options?: ErrorOptions,
+  ) {
+    super(
+      'RangeValue',
+      `\`process.env.${name}'s\` value "${value}" is not allowed; allowable range: ${range[0]} - ${range[1]}`,
+      options,
+    );
+  }
+}

@@ -1,4 +1,8 @@
-import { NotDefinedConfigError, ListValueConfigError } from './error';
+import {
+  ListValueConfigError,
+  NotDefinedConfigError,
+  RangeValueConfigError,
+} from './error';
 import { getNumber } from './number';
 
 describe('getNumber', () => {
@@ -47,6 +51,27 @@ describe('getNumber', () => {
           expect(() => {
             getNumber('TEST_NUMBER', { allowList: [10, 20] });
           }).toThrow(new ListValueConfigError('TEST_NUMBER', 30.33, [10, 20]));
+        });
+      });
+    });
+    describe('allow range is defined', () => {
+      describe('environmental variable is within allowable range', () => {
+        it('return the environmental variable as a number', () => {
+          process.env.TEST_NUMBER = '11.50';
+          const value = getNumber('TEST_NUMBER', {
+            allowRange: [10, 20],
+          });
+          expect(value).toEqual(11.5);
+        });
+      });
+      describe('environmental variable is NOT within allowable range', () => {
+        it('throws an error', () => {
+          process.env.TEST_NUMBER = '20.00001';
+          expect(() => {
+            getNumber('TEST_NUMBER', { allowRange: [10, 20] });
+          }).toThrow(
+            new RangeValueConfigError('TEST_NUMBER', 20.00001, [10, 20]),
+          );
         });
       });
     });

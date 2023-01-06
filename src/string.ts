@@ -1,21 +1,43 @@
 import { NotDefinedConfigError, ListValueConfigError } from './error';
 
-export type GetStringOptions = {
+type GetStringOptionsAllow = {
   allowList?: string[];
-  allowUndefined?: boolean;
-  default?: string;
 };
+
+type GetStringOptionsAllowUndefined = {
+  allowUndefined: true;
+  default?: undefined;
+} & GetStringOptionsAllow;
+type GetStringOptionsNoDefault = {
+  allowUndefined?: false;
+  default?: undefined;
+} & GetStringOptionsAllow;
+type GetStringOptionsDefault = {
+  allowUndefined?: false;
+  default: string;
+} & GetStringOptionsAllow;
+
+export type GetStringOptions =
+  | GetStringOptionsAllowUndefined
+  | GetStringOptionsNoDefault
+  | GetStringOptionsDefault;
+
 /**
- * Returns an environmental variable as a `string`
+ * Returns an environmental variable as a `string` or undefined. Optionally the
+ * value can be validated by an `allowList`.
  */
 export function getString(
   name: string,
   options: {
     allowList?: string[];
     allowUndefined: true;
-    default?: string;
+    default?: undefined;
   },
 ): string | undefined;
+/**
+ * Returns an environmental variable as a `string` or, if undefined, throws an
+ * error. Optionally the value can be validated by an `allowList`.
+ */
 export function getString(
   name: string,
   options?: {
@@ -24,6 +46,10 @@ export function getString(
     default?: undefined;
   },
 ): string;
+/**
+ * Returns an environmental variable as a `string` or, if undefined, the
+ * provided default value. Optionally the value can be validated by an `allowList`.
+ */
 export function getString(
   name: string,
   options: {

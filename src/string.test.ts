@@ -1,4 +1,4 @@
-import { NotDefinedConfigError, ValueConfigError } from './error';
+import { NotDefinedConfigError, ListValueConfigError } from './error';
 import { getString } from './string';
 
 describe('getString', () => {
@@ -46,7 +46,9 @@ describe('getString', () => {
           process.env.TEST_STRING = 'baz';
           expect(() => {
             getString('TEST_STRING', { allowList: ['foo', 'bar'] });
-          }).toThrow(new ValueConfigError('TEST_STRING', 'baz'));
+          }).toThrow(
+            new ListValueConfigError('TEST_STRING', 'baz', ['foo', 'bar']),
+          );
         });
       });
     });

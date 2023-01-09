@@ -20,3 +20,35 @@ export class ValueConfigError extends ConfigError {
     );
   }
 }
+
+export class ListValueConfigError extends ConfigError {
+  constructor(
+    name: string,
+    value: string | number,
+    list: string[] | number[],
+    options?: ErrorOptions,
+  ) {
+    super(
+      'ListValue',
+      `\`process.env.${name}'s\` value "${value}" is not allowed; allowable values: ${list.join(
+        ', ',
+      )}`,
+      options,
+    );
+  }
+}
+
+export class RangeValueConfigError extends ConfigError {
+  constructor(
+    name: string,
+    value: string | number,
+    range: [number, number],
+    options?: ErrorOptions,
+  ) {
+    super(
+      'RangeValue',
+      `\`process.env.${name}'s\` value "${value}" is not allowed; allowable range: ${range[0]} - ${range[1]}`,
+      options,
+    );
+  }
+}

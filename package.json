@@ -67,9 +67,9 @@
     "lint:typescript": "tsc -p 'tsconfig.build.cjs.json' --noEmit",
     "lint": "concurrently \"npm:lint:*(!fix)\" -g",
     "prepublish": "npm run build",
-    "release:pr": "dripip pr --json",
-    "release:preview": "dripip preview-or-pr --json",
-    "release:stable": "dripip stable --json",
+    "release:pr": "dripip pr",
+    "release:preview": "dripip preview",
+    "release:stable": "dripip stable",
     "test:ci": "npm run test -- --maxWorkers 2 --coverage --ci --reporters=default",
     "test:watch": "npm run test -- --watchAll",
     "test": "jest"

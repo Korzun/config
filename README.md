@@ -27,7 +27,7 @@ export const log = {
     default: true
   }),
   flushFrequency: getNumber('LOG_FLUSH_DURATION', {
-    allowRange: [500, 10_000]
+    allowRange: [500, 10_000],
     default: 1000
   }), 
   level: getString('LOG_LEVEL', {
@@ -35,7 +35,7 @@ export const log = {
     default: 'error'
   }),
   transport: getString('LOG_TRANSPORT', {
-    allowList: ['file', 'http', 'log']
+    allowList: ['file', 'http', 'log'],
     allowUndefined: true,
   }),
 };

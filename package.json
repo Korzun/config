@@ -40,7 +40,7 @@
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "concurrently": "^7.3.0",
-    "dripip": "^0.10.0",
+    "dripip": "^0.11.0-next.5",
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",
@@ -67,9 +67,6 @@
     "lint:typescript": "tsc -p 'tsconfig.build.cjs.json' --noEmit",
     "lint": "concurrently \"npm:lint:*(!fix)\" -g",
     "prepublish": "npm run build",
-    "release:pr": "dripip pr --json",
-    "release:preview": "dripip preview-or-pr --json",
-    "release:stable": "dripip stable --json",
     "test:ci": "npm run test -- --maxWorkers 2 --coverage --ci --reporters=default",
     "test:watch": "npm run test -- --watchAll",
     "test": "jest"

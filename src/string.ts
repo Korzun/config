@@ -78,6 +78,88 @@ export function getString(name: string, options: GetStringOptions = {}) {
   throw error;
 }
 
+type GetStringArrayOptionsAllow = {
+  allowList?: string[];
+};
+
+type GetStringArrayOptionsAllowUndefined = {
+  allowUndefined: true;
+  default?: undefined;
+} & GetStringArrayOptionsAllow;
+type GetStringArrayOptionsNoDefault = {
+  allowUndefined?: false;
+  default?: undefined;
+} & GetStringArrayOptionsAllow;
+type GetStringArrayOptionsDefault = {
+  allowUndefined?: false;
+  default: string[];
+} & GetStringArrayOptionsAllow;
+
+export type GetStringArrayOptions =
+  | GetStringArrayOptionsAllowUndefined
+  | GetStringArrayOptionsNoDefault
+  | GetStringArrayOptionsDefault;
+
+/**
+ * Returns an environmental variable as a `string` array. Optionally the value
+ * can be validated by an `allowList`.
+ */
+export function getStringArray(
+  name: string,
+  options: {
+    allowList?: string[];
+    allowUndefined: true;
+    default?: undefined;
+  },
+): string[];
+/**
+ * Returns an environmental variable as a `string` array or, if undefined,
+ * throws an error. Optionally the values can be validated by an `allowList`.
+ */
+export function getStringArray(
+  name: string,
+  options?: {
+    allowList?: string[];
+    allowUndefined?: false;
+    default?: undefined;
+  },
+): string[];
+/**
+ * Returns an environmental variable as a `string` array or, if undefined, the
+ * provided default value. Optionally the values can be validated by an `allowList`.
+ */
+export function getStringArray(
+  name: string,
+  options: {
+    allowList?: string[];
+    allowUndefined?: false;
+    default: string[];
+  },
+): string[];
+export function getStringArray(
+  name: string,
+  options: GetStringArrayOptions = {},
+) {
+  const { allowList, allowUndefined, default: defaultValue } = options;
+  const value = process.env[name];
+  if (value !== undefined && value !== '') {
+    const valueList = value.split(',');
+    valueList.forEach((value) => validateList(name, value, allowList));
+    return valueList;
+  }
+  if (defaultValue !== undefined) {
+    return defaultValue;
+  }
+  if (allowUndefined) {
+    return [];
+  }
+  const error = new NotDefinedConfigError(name);
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(error, getString);
+  }
+  throw error;
+}
+
 const validateList = (name: string, value: string, list?: string[]): void => {
   if (list !== undefined && !list.includes(value)) {
     const error = new ListValueConfigError(name, value, list);

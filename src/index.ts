@@ -1,3 +1,3 @@
 export { getBoolean, GetBooleanOptions } from './boolean';
-export { getNumber, GetNumberOptions } from './number';
-export { getString, GetStringOptions } from './string';
+export { getNumber, GetNumberOptions, getNumberArray, GetNumberArrayOptions } from './number';
+export { getString, GetStringOptions, getStringArray, GetStringArrayOptions } from './string';

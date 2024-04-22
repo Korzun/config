@@ -3,7 +3,7 @@
   "description": "Simple Node.js Application Configuration Utility",
   "private": false,
   "license": "MIT",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "keywords": [
     "config",
     "registry",

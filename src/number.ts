@@ -128,6 +128,137 @@ export function getNumber(name: string, options: GetNumberOptions = {}) {
   throw error;
 }
 
+type GetNumberArrayOptionsAllowList = {
+  allowList?: number[];
+  allowRange?: undefined;
+};
+type GetNumberArrayOptionsAllowRange = {
+  allowList?: undefined;
+  allowRange?: [number, number];
+};
+type GetNumberArrayOptionsAllow =
+  | GetNumberArrayOptionsAllowList
+  | GetNumberArrayOptionsAllowRange;
+
+type GetNumberArrayOptionsAllowUndefined = {
+  allowUndefined: true;
+  default?: undefined;
+} & GetNumberArrayOptionsAllow;
+type GetNumberArrayOptionsNoDefault = {
+  allowUndefined?: false;
+  default?: undefined;
+} & GetNumberArrayOptionsAllow;
+type GetNumberArrayOptionsDefault = {
+  allowUndefined?: false;
+  default: number[];
+} & GetNumberArrayOptionsAllow;
+
+export type GetNumberArrayOptions =
+  | GetNumberArrayOptionsAllowUndefined
+  | GetNumberArrayOptionsNoDefault
+  | GetNumberArrayOptionsDefault;
+
+/**
+ * Returns an environmental variable as a `number` array. Optionally the value
+ * can be validated by an `allowList` or `allowRange`.
+ */
+export function getNumberArray(
+  name: string,
+  options: {
+    allowUndefined: true;
+    default?: undefined;
+  } & (
+    | {
+        allowList?: undefined;
+        allowRange?: undefined;
+      }
+    | {
+        allowList: number[];
+      }
+    | {
+        allowRange: [number, number];
+      }
+  ),
+): number[];
+/**
+ * Returns an environmental variable as a `number` array or, if undefined,
+ * throws an error. Optionally the value can be validated by an `allowList` or
+ * `allowRange`.
+ */
+export function getNumberArray(
+  name: string,
+  options?: {
+    allowUndefined?: false;
+    default?: undefined;
+  } & (
+    | {
+        allowList?: undefined;
+        allowRange?: undefined;
+      }
+    | {
+        allowList: number[];
+      }
+    | {
+        allowRange: [number, number];
+      }
+  ),
+): number[];
+/**
+ * Returns an environmental variable as a `number` array or, if undefined, the
+ * provided default value. Optionally the value can be validated by an
+ * `allowList` or `allowRange`.
+ */
+export function getNumberArray(
+  name: string,
+  options: {
+    allowUndefined?: false;
+    default: number[];
+  } & (
+    | {
+        allowList?: undefined;
+        allowRange?: undefined;
+      }
+    | {
+        allowList: number[];
+      }
+    | {
+        allowRange: [number, number];
+      }
+  ),
+): number[];
+export function getNumberArray(
+  name: string,
+  options: GetNumberArrayOptions = {},
+) {
+  const {
+    allowList,
+    allowRange,
+    allowUndefined,
+    default: defaultValue,
+  } = options;
+  const stringValue = process.env[name];
+  if (stringValue !== undefined && stringValue !== '') {
+    const values = stringValue.split(',').map((value) => {
+      const numberValue = Number(value);
+      validateList(name, value, numberValue, allowList);
+      validateRange(name, value, numberValue, allowRange);
+      return numberValue;
+    });
+    return values;
+  }
+  if (defaultValue !== undefined) {
+    return defaultValue;
+  }
+  if (allowUndefined) {
+    return [];
+  }
+  const error = new NotDefinedConfigError(name);
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(error, getNumberArray);
+  }
+  throw error;
+}
+
 const validateList = (
   name: string,
   stringValue: string,
